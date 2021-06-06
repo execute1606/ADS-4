@@ -12,10 +12,9 @@ private:
     int end;
     int count;
 public:
-    explicit TPQueue(int = 100);
+    TPQueue();
     ~TPQueue();
     void push(const T&);
-
     T pop();
     T get() const;
     bool Full() const;
@@ -23,12 +22,11 @@ public:
 };
 
 template<typename T>
-TPQueue<T>::TPQueue(int sizeQueue) :
-    size(sizeQueue),
+TPQueue<T>::TPQueue() :
+    size(100),
     begin(0), end(0), count(0) {
     arr = new T[size + 1];
 }
-
 template<typename T>
 TPQueue<T>::~TPQueue() {
     delete[] arr;
@@ -36,13 +34,18 @@ TPQueue<T>::~TPQueue() {
 
 template<typename T>
 void TPQueue<T>::push(const T& item) {
-    assert(count > size);
-    if (end != 0) {
-        arr[end] = item;
+    assert(count < size);
+    if (count != 0) {
         for (int i = end - 1; i >= begin; i--) {
+            if (arr[i].prior >= item.prior) {
+                arr[i + 1] = item;
+                break;
+            }
             if (arr[i].prior < item.prior) {
-                arr[i] = item;
                 arr[i + 1] = arr[i];
+            }
+            if (begin == i) {
+                arr[i] = item;
             }
         }
     }
@@ -55,7 +58,6 @@ void TPQueue<T>::push(const T& item) {
         end -= size + 1;
     }
 }
-
 template<typename T>
 T TPQueue<T>::pop() {
     assert(count > 0);
@@ -65,23 +67,19 @@ T TPQueue<T>::pop() {
         begin -= size + 1;
     return item;
 }
-
 template<typename T>
 T TPQueue<T>::get() const {
     assert(count > 0);
     return arr[begin];
 }
-
-template<typename T>
-bool TPQueue<T>::Empty() const {
-    return count == 0;
-}
-
 template<typename T>
 bool TPQueue<T>::Full() const {
     return count == size;
 }
-
+template<typename T>
+bool TPQueue<T>::Empty() const {
+    return count == 0;
+}
 struct SYM {
     char ch;
     int  prior;
