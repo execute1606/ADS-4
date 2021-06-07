@@ -5,20 +5,20 @@
 
 template<typename T>
 class TPQueue {
-private:
+  // Сюда помещается описание структуры "Очередь с приоритетами"
+ private:
     T* arr;
     int size;
-    int begin;
-    int end;
+    int begin, end;
     int count;
-public:
+ public:
     TPQueue();
     ~TPQueue();
     void push(const T&);
     T pop();
     T get() const;
-    bool Full() const;
-    bool Empty() const;
+    bool isFull() const;
+    bool isEmpty() const;
 };
 
 template<typename T>
@@ -34,29 +34,28 @@ TPQueue<T>::~TPQueue() {
 
 template<typename T>
 void TPQueue<T>::push(const T& item) {
-    assert(count < size);
-    if (count != 0) {
-        for (int i = end - 1; i >= begin; i--) {
-            if (arr[i].prior >= item.prior) {
-                arr[i + 1] = item;
-                break;
-            }
-            if (arr[i].prior < item.prior) {
-                arr[i + 1] = arr[i];
-            }
-            if (begin == i) {
-                arr[i] = item;
-            }
+  assert(count < size);
+  if (count != 0) {
+    for (int i = end - 1; i >= begin; i--) {
+        if (arr[i].priori >= item.priori) {
+          arr[i + 1] = item;
+          break;
+        }
+        if (arr[i].priori < item.priori) {
+          arr[i + 1] = arr[i];
+        }
+        if (begin == i) {
+          arr[i] = item;
         }
     }
-    else {
-        arr[begin] = item;
-    }
-    end++;
-    count++;
-    if (end > size) {
-        end -= size + 1;
-    }
+  } else {
+     arr[begin] = item;
+  }
+  end++;
+  count++;
+  if (end > size) {
+    end -= size + 1;
+  }
 }
 template<typename T>
 T TPQueue<T>::pop() {
@@ -73,16 +72,16 @@ T TPQueue<T>::get() const {
     return arr[begin];
 }
 template<typename T>
-bool TPQueue<T>::Full() const {
-    return count == size;
+bool TPQueue<T>::isFull() const {
+  return count == size;
 }
 template<typename T>
-bool TPQueue<T>::Empty() const {
-    return count == 0;
+bool TPQueue<T>::isEmpty() const {
+  return count == 0;
 }
 struct SYM {
-    char ch;
-    int  prior;
+  char ch;
+  int  priori;
 };
 
 #endif // INCLUDE_TPQUEUE_H_
